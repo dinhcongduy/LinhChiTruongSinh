@@ -1,268 +1,151 @@
-import React, { useState, useEffect } from 'react';
-import clsx from 'clsx';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {
-  Box,
-  Card,
-  Link,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
+  IconButton,
   TablePagination,
   TableRow,
-  Typography,
+  TableHead,
+  TableContainer,
+  TableCell,
+  TableBody,
+  Table,
+  Paper,
   makeStyles,
-  MenuItem,
   Menu,
-  Drawer,
-  Grid,
-  Container,
-  TextField,
-  CardContent} from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { LinkApi } from 'src/utils/api/api-link';
-import { GET } from 'src/utils/api/method';
-import Page from 'src/components/Page';
-import { Autocomplete } from '@material-ui/lab';
+  MenuItem
+} from '@material-ui/core';
+import AlertDialog from 'src/common/AlertDialog';
 
-const useStyles = makeStyles((theme) => ({
-  root: {},
-  avatar: {
-    marginRight: theme.spacing(2)
+const useStyles = makeStyles({
+  table: {
+    minWidth: 200
   }
-}));
-const ITEM_HEIGHT = 48;
+});
 
-const Results = ({ className, newaddedOrder, customers, ...rest }) => {
+export default function Results({ onDeleteCustomer, onEditCustomer, data }) {
   const classes = useStyles();
-  const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
-  const [limit, setLimit] = useState(5);
-  const [page, setPage] = useState(0);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const openMenu = Boolean(anchorEl);
-  const [opendialog, setOpendialog] = React.useState(false);
-  const [data, setData] = useState([]);
-  const [selectedItem, setSelectedItem] = useState([]);
-  const [opensides, setopenside] = useState(false);
-  const [selectedMenuItem, setSelectedMenuItem] = useState(null);
-  //console.log("KKK: ", newaddedOrder);
-  useEffect(() => {    
-    makeRemoteRequest();
-  }, []); 
-  const makeRemoteRequest = async () => {
-    let res=await GET(LinkApi.customers_getall)
-    console.log(res); 
-    if (res!==null) {
-      setData(res)
-    }
-};
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [actionMenuPos, setActionMenuPos] = React.useState(null);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [openAlertDelete, setOpenAlertDeleter] = useState(false);
 
-  const handleLimitChange = (event) => {
-    setLimit(event.target.value);
-  };
-
-  const handlePageChange = (event, newPage) => {
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
-  const handleCloseLongMenu = () => {
-    setAnchorEl(null);
+  const handleChangeRowsPerPage = event => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
-  
-  const deleteItem = async () => {
-    //setAnchorEl(null);
-    //alert(selectedDeleteItem)
-    await GET(LinkApi.customer_del+selectedMenuItem.ID)
-        .then(respon => {
-          console.log("respon:", respon)
-          if (respon==="SUCCESS") {
-           window.location.reload()
-           setAnchorEl(null);
-          }
-        })
-        .catch(error => console.log(error));
-      };
-  
 
-  const list = (anchor) => (
-    <div
-      className={clsx(classes.list, {
-        [classes.fullList]: anchor === 'top' || anchor === 'bottom',
-      })}
-      role="presentation"
-   //   onClick={setopenside(false)}
-   //   onKeyDown={setopenside(false)}
-    >
-      <div>dd</div>
-    </div>
-  );
-  
+  const handleCloseActionMenu = () => {
+    setActionMenuPos(null);
+  };
+
+  const handleEditCustomer = () => {
+    setActionMenuPos(null);
+    onEditCustomer(selectedCustomer);
+  };
+
+  const handleDeleteCustomer = () => {
+    setActionMenuPos(null);
+    setOpenAlertDeleter(true);
+  };
+
+  const handleAlertDeleteOK = () => {
+    setOpenAlertDeleter(false);
+    onDeleteCustomer(selectedCustomer);
+  };
+
+  const handleAlertDeleteCancel = () => {
+    setOpenAlertDeleter(false);
+  };
+
+  const emptyRows =
+    rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+
   return (
-    <Page>
-      
-      
-      <Container maxWidth={false}>
-        <Grid
-          container
-          justify="space-between"
-          spacing={1}
+    <Paper>
+      <TableContainer component={Paper}>
+        <AlertDialog
+          open={openAlertDelete}
+          title="Xóa khách hàng"
+          content="Bạn chắc chắn muốn xóa khách hàng?"
+          onOKClick={handleAlertDeleteOK}
+          onCancelClick={handleAlertDeleteCancel}
+        />
+        <Menu
+          id="long-menu"
+          anchorEl={actionMenuPos}
+          keepMounted
+          open={Boolean(actionMenuPos)}
+          onClose={handleCloseActionMenu}
         >
-          <Grid
-            item
-            lg={12}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <Card
-              className={clsx(classes.root, className)}
-              {...rest}
-            >
-              <Box mt={3} style={{backgroundColor: '#f4f6f8'}}>
-                <Card>
-                  <CardContent>
-                    <Box maxWidth={400} display="flex" flexDirection="row" style={{ flex: 1, marginRight: 100 }}>
-                      <Autocomplete
-                        size="small"
-                        id="combo-box-demo"
-                        classes={classes}
-                        options={data}
-                        getOptionLabel={(option) => option.Name + " "+ option.Phone}
-                        style={{ width: 500}}
-                        renderInput={(params) => <TextField {...params} label="Search customer" InputLabelProps={{ style: { fontSize: 14, height: 150 } }} variant="outlined" />}
-                      />
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Box>
-              <PerfectScrollbar>
-                <Box minWidth={1050}>
-                  <Drawer anchor="bottom" open={opensides} onClose={() => setopenside(false)}>
-                    {list('', data)}
-                  </Drawer>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>
-                          Name
-                        </TableCell>
-                        <TableCell>
-                          Phone
-                        </TableCell>
-                        <TableCell>
-                          Address
-                        </TableCell>
-                        <TableCell>
-                          Action
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <Menu
-                      id="long-menu"
-                      anchorEl={anchorEl}
-                      keepMounted
-                      open={openMenu}
-                      onClose={handleCloseLongMenu}
-                      PaperProps={{
-                        style: {
-                          maxHeight: ITEM_HEIGHT * 4.5,
-                          width: '20ch',
-                        },
+          <MenuItem onClick={handleEditCustomer}>Sửa</MenuItem>
+          <MenuItem onClick={handleDeleteCustomer}>Xóa</MenuItem>
+        </Menu>
+        <Table className={classes.table} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>STT</TableCell>
+              <TableCell>Tên</TableCell>
+              <TableCell align="right">SĐT</TableCell>
+              <TableCell align="right">Địa chỉ</TableCell>
+              <TableCell align="right">Action</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((customer, index) => (
+                <TableRow style={{ height: 60 }} key={customer.ID}>
+                  <TableCell width="50" component="th" scope="row">
+                    {page * rowsPerPage + index + 1}
+                  </TableCell>
+                  <TableCell>{customer.Name}</TableCell>
+                  <TableCell align="right">{customer.Phone}</TableCell>
+                  <TableCell align="right">{customer.Address}</TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      aria-label="more"
+                      aria-controls="long-menu"
+                      aria-haspopup="true"
+                      size="small"
+                      padding="0"
+                      onClick={event => {
+                        setActionMenuPos(event.currentTarget);
+                        setSelectedCustomer(customer);
                       }}
                     >
-                      <MenuItem onClick={handleCloseLongMenu}>
-                        <Typography
-                          aria-label="delete"
-                          //aria-controls="long-menu"
-                          //aria-haspopup="true"
-                          onClick={() => deleteItem()}
-                        >
-                          Delete
-                        </Typography>
-                      </MenuItem>
-                    </Menu>
-                    <TableBody>
-                      {data.slice(0, limit).map((item) => (
-                        <TableRow
-                          hover
-                          key={item.ID}
-                          selected={selectedCustomerIds.indexOf(item.ID) !== -1}
-                        >
-                          <TableCell>
-                            <Box
-                              alignItems="center"
-                              display="flex"
-                            >
-                              <Typography
-                                color="textPrimary"
-                                variant="body1"
-                                style={{ fontSize: 14, color: 'blue' }}
-                                onClick={() => {
-                                  setopenside(true)
-                                  setSelectedItem(item)
-                                }}
-                              >
-                                <Link href="#">
-                                  {item.Name}
-                                </Link>
-                              </Typography>
-                            </Box>
-                          </TableCell>
-                          <TableCell>
-                            {item.Phone}
-                          </TableCell>
-                          <TableCell>
-                            <Typography
-                              style={{ fontSize: 14 }}
-                              color="textPrimary"
-                              variant="body1"
-                            >
-                              {item.Address}
-                            </Typography>
-                          </TableCell>
-                          <TableCell>
-                            <IconButton
-                              aria-label="more"
-                              aria-controls="long-menu"
-                              aria-haspopup="true"
-                              onClick={(event) => {
-                                setAnchorEl(event.currentTarget);
-                                setSelectedMenuItem(item)
-                              }}
-                            >
-                              <MoreVertIcon />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </Box>
-              </PerfectScrollbar>
-              <TablePagination
-                component="div"
-                count={data.length}
-                onChangePage={handlePageChange}
-                onChangeRowsPerPage={handleLimitChange}
-                page={page}
-                rowsPerPage={limit}
-                rowsPerPageOptions={[5, 10, 25]}
-              />
-            </Card>
-          </Grid>
-        </Grid>
-      </Container>
-    </Page>
+                      <MoreVertIcon fontSize="small" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 60 * emptyRows }}>
+                <TableCell colSpan={5} />
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={data != null ? data.length : 0}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
+    </Paper>
   );
-};
+}
 
 Results.propTypes = {
-  className: PropTypes.string,
-  customers: PropTypes.array.isRequired,
-  orderz: PropTypes.object
+  onDeleteCustomer: PropTypes.func,
+  onEditCustomer: PropTypes.func
 };
-
-export default Results;

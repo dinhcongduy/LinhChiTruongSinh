@@ -1,0 +1,13 @@
+Miêu tả phần mềm quản lý đơn hàng
+1. Phân quyền quản lý nhân viên: lưu vết ngày sửa đổi thông tin đơn hàng nếu có
+2. Quản lý thông tin khách hàng: CTV, đại lý và khách lẻ:  tra cứu theo tên, tỉnh thành, khu vực, số điện thoại, lọc khách VIP(theo tiêu chí số lượng hàng mua,…) chi tiết thông tin từng đơn, nhắc ngày sinh nhật KH,lọc được theo sản phẩm
+3. Quản lý đơn hàng:
+- Đơn hàng mới nhất, đơn hàng tiếp theo
+- Ngày giao hàng
+4. Thanh toán: - Tích hợp hệ thống tự động kiểm tra tài khoản ngân hàng, nhận biết thanh toán chuyển khoản tự động
+5. Kế toán
+- Thống kê doanh thu chi phí chi tiết theo yêu cầu: thực tế và trên sổ sách, tiền mặt, chuyển khoản
+- Tổng hợp số tiền mặt nhân viên phải bàn giao cuối ngày
+- Theo dõi công nợ, thanh toán
+- Thống kê doanh số bán hàng cho cộng tác viên, lọc theo doanh số định mức(VD dưới 50tri hưởng 1%, 50-100tri  2%...)
+-Thu chi theo dõi theo từng đối tượng: thu của khách thực tế và chênh lệnh chi phí phát sinh, chi tiền mặt/ chuyển khoản, chi bằng tiền của giám đốc hoặc tài khoản công ty chi

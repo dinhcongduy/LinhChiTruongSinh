@@ -24,8 +24,8 @@ import NavItem from './NavItem';
 
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith'
+  type: 'Admin',
+  name: 'Administrator'
 };
 
 const items = [
@@ -130,7 +130,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
           color="textSecondary"
           variant="body2"
         >
-          {user.jobTitle}
+          {user.type}
         </Typography>
       </Box>
       <Divider />

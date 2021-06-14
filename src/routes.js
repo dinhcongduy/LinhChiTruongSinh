@@ -4,7 +4,6 @@ import { Navigate } from 'react-router-dom';
 import DashboardLayout from 'src/layouts/DashboardLayout';
 import MainLayout from 'src/layouts/MainLayout';
 import AccountView from 'src/views/account/AccountView';
-import CustomerListView from 'src/views/customer/CustomerListView';
 import ManageOrdersView from 'src/views/oders/ManageOrdersView';
 import DashboardView from 'src/views/reports/DashboardView';
 import LoginView from 'src/views/auth/LoginView';
@@ -13,6 +12,7 @@ import RegisterView from 'src/views/auth/RegisterView';
 import SettingsView from 'src/views/settings/SettingsView';
 import AcountingView from 'src/views/customer/AccountingView';
 import CustomerTabView from './views/customer/CustomerTabView';
+import CustomerListView from './views/customer/CustomerListView';
 
 const routes = [
   {
@@ -22,7 +22,7 @@ const routes = [
       { path: 'dashboard', element: <DashboardView /> },
       { path: 'manage_oders', element: <ManageOrdersView /> },
       { path: 'acounting', element: <AcountingView /> },
-      { path: 'customers', element: <CustomerTabView /> },
+      { path: 'customers', element: <CustomerListView /> },
       { path: 'account', element: <AccountView /> },
       { path: 'settings', element: <SettingsView /> },
       { path: '*', element: <Navigate to="/login" /> }

@@ -16,11 +16,12 @@ import {
 
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
-  city: 'Los Angeles',
-  country: 'USA',
+  city: 'Hà Nội',
+  country: 'Việt Nam',
   jobTitle: 'Senior Developer',
-  name: 'Katarina Smith',
-  timezone: 'GTM-7'
+  name: 'Administrator',
+  timezone: 'GTM-7',
+  type: 'Admin',
 };
 
 const useStyles = makeStyles(() => ({
@@ -60,14 +61,20 @@ const Profile = ({ className, ...rest }) => {
             color="textSecondary"
             variant="body1"
           >
-            {`${user.city} ${user.country}`}
+            {user.type}
+          </Typography>
+          <Typography
+            color="textSecondary"
+            variant="body1"
+          >
+            {`${user.city}, ${user.country}`}
           </Typography>
           <Typography
             className={classes.dateText}
             color="textSecondary"
             variant="body1"
           >
-            {`${moment().format('hh:mm A')} ${user.timezone}`}
+            {`${moment().format('HH:MM A')} ${user.timezone}`}
           </Typography>
         </Box>
       </CardContent>
