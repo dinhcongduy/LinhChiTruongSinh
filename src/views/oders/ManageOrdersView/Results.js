@@ -817,7 +817,7 @@ const Results = ({ className, newaddedOrder, customers, ...rest }) => {
                   <TableCell>
                     <Payment item={item} />
                   </TableCell>
-                  <TableCell>{item.UserId}</TableCell>
+                  <TableCell>Nhân viên {item.UserId}</TableCell>
                   <TableCell>
                     <IconButton
                       aria-label="more"
