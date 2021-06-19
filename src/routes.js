@@ -22,7 +22,7 @@ const routes = [
       { path: 'dashboard', element: <DashboardView /> },
       { path: 'manage_oders', element: <ManageOrdersView /> },
       { path: 'acounting', element: <AcountingView /> },
-      { path: 'customers', element: <CustomerListView /> },
+      { path: 'customers', element: <CustomerTabView /> },
       { path: 'account', element: <AccountView /> },
       { path: 'settings', element: <SettingsView /> },
       { path: '*', element: <Navigate to="/login" /> }

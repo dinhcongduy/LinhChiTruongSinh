@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import FilterListIcon from '@material-ui/icons/FilterList';
 import {
   IconButton,
   TablePagination,
@@ -13,15 +14,29 @@ import {
   Paper,
   makeStyles,
   Menu,
-  MenuItem
+  MenuItem,
+  Toolbar,
+  Tooltip,
+  Typography,
+  TextField
 } from '@material-ui/core';
 import AlertDialog from 'src/common/AlertDialog';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   table: {
     minWidth: 200
+  },
+  toolbar: {
+    display: 'flex',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(1),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  search: {
+    width: '30%'
   }
-});
+}));
 
 export default function Results({ onDeleteCustomer, onEditCustomer, data }) {
   const classes = useStyles();
@@ -68,24 +83,39 @@ export default function Results({ onDeleteCustomer, onEditCustomer, data }) {
 
   return (
     <Paper>
-      <TableContainer component={Paper}>
-        <AlertDialog
-          open={openAlertDelete}
-          title="Xóa khách hàng"
-          content="Bạn chắc chắn muốn xóa khách hàng?"
-          onOKClick={handleAlertDeleteOK}
-          onCancelClick={handleAlertDeleteCancel}
+      <AlertDialog
+        open={openAlertDelete}
+        title="Xóa khách hàng"
+        content="Bạn chắc chắn muốn xóa khách hàng?"
+        onOKClick={handleAlertDeleteOK}
+        onCancelClick={handleAlertDeleteCancel}
+      />
+      <Menu
+        id="long-menu"
+        anchorEl={actionMenuPos}
+        keepMounted
+        open={Boolean(actionMenuPos)}
+        onClose={handleCloseActionMenu}
+      >
+        <MenuItem onClick={handleEditCustomer}>Sửa</MenuItem>
+        <MenuItem onClick={handleDeleteCustomer}>Xóa</MenuItem>
+      </Menu>
+      <Toolbar className={classes.toolbar}>
+        <TextField
+          className={classes.search}
+          id="outlined-search"
+          label="Tìm kiếm khách hàng"
+          type="search"
+          variant="outlined"
+          size="small"
         />
-        <Menu
-          id="long-menu"
-          anchorEl={actionMenuPos}
-          keepMounted
-          open={Boolean(actionMenuPos)}
-          onClose={handleCloseActionMenu}
-        >
-          <MenuItem onClick={handleEditCustomer}>Sửa</MenuItem>
-          <MenuItem onClick={handleDeleteCustomer}>Xóa</MenuItem>
-        </Menu>
+        <Tooltip title="Filter list">
+          <IconButton aria-label="filter list">
+            <FilterListIcon />
+          </IconButton>
+        </Tooltip>
+      </Toolbar>
+      <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>

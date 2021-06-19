@@ -37,7 +37,7 @@ const ManageOrdersView = () => {
   return (
     <Page
       className={classes.root}
-      title="Manage Orders"
+      title="Quản lý đơn hàng"
     >
       <Container maxWidth={false}>
         <Toolbar handleAddOrderToindexJS={handleAddOrderToindexJS} handleSearch={handleSearch} />

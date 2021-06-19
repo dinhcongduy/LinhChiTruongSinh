@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
@@ -12,62 +12,91 @@ import {
   makeStyles,
   Drawer,
   Typography,
+  IconButton,
+  Divider,
   FormControlLabel
 } from '@material-ui/core';
 import moment from 'moment';
 import { Search as SearchIcon } from 'react-feather';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import MAWB from './MAWB';
+import NewOrderView from './NewOrderView';
 
 let Connection = require('tedious').Connection;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {},
   importButton: {
     marginRight: theme.spacing(1)
   },
   exportButton: {
     marginRight: theme.spacing(1)
+  },
+  backButton: {
+    padding: theme.spacing(1)
   }
 }));
 
-
-
-const Toolbar = ({ className, handleAddOrderToindexJS, handleSearch, ...rest }) => {
+const Toolbar = ({
+  className,
+  handleAddOrderToindexJS,
+  handleSearch,
+  ...rest
+}) => {
   const classes = useStyles();
   const [opensides, setopenside] = useState(false);
   const [searchDate, setsearchDate] = useState('');
-  
-  const list = (anchor) => (
+
+  const list = anchor => (
     <div
       className={clsx(classes.list, {
-        [classes.fullList]: anchor === 'top' || anchor === 'bottom',
+        [classes.fullList]: anchor === 'top' || anchor === 'bottom'
       })}
       role="presentation"
-   //   onClick={setopenside(false)}
-   //   onKeyDown={setopenside(false)}
+      //   onClick={setopenside(false)}
+      //   onKeyDown={setopenside(false)}
     >
       <MAWB type={'newMAWB'} handleAddOrder={handleAddOrder} />
     </div>
   );
-  const handleAddOrder = (item) => {
-    handleAddOrderToindexJS(item);
-  }
-
-
+  const handleAddOrder = () => {
+    setopenside(false);
+  };
 
   return (
-    <div
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
-      <Drawer anchor="right" open={opensides} onClose={() => setopenside(false)}>
-        {list('')}
-      </Drawer>
-      <Box
-        display="flex"
-        justifyContent="space-between"
+    <form className={clsx(classes.root, className)} {...rest}>
+      <Drawer
+        anchor="right"
+        open={opensides}
+        onClose={() => setopenside(false)}
       >
-        <Typography style={{ fontSize: 20, fontWeight: 'bold', color: 'green'}}>&nbsp;</Typography>
+        <Box
+          display="flex"
+          justifyContent="flex-start"
+          className={classes.backButton}
+        >
+          <IconButton
+            onClick={() => {
+              setopenside(false);
+            }}
+            aria-label="back"
+          >
+            <ArrowBackIcon />
+          </IconButton>
+        </Box>
+        <Divider light />
+        <NewOrderView
+          onNewOrder={() => {
+            handleAddOrder();
+          }}
+        />
+      </Drawer>
+      <Box display="flex" justifyContent="space-between">
+        <Typography
+          style={{ fontSize: 20, fontWeight: 'bold', color: 'green' }}
+        >
+          &nbsp;
+        </Typography>
         <Button
           color="primary"
           variant="contained"
@@ -77,7 +106,7 @@ const Toolbar = ({ className, handleAddOrderToindexJS, handleSearch, ...rest }) 
           Thêm đơn hàng
         </Button>
       </Box>
-    </div>
+    </form>
   );
 };
 

@@ -6,7 +6,8 @@ import {
   Button,
   IconButton,
   makeStyles,
-  Snackbar
+  Snackbar,
+  Divider
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import Page from 'src/components/Page';
@@ -22,6 +23,9 @@ const useStyles = makeStyles(theme => ({
     minHeight: '100%',
     paddingBottom: theme.spacing(3),
     paddingTop: theme.spacing(3)
+  },
+  backButton: {
+    padding: theme.spacing(1)
   }
 }));
 
@@ -173,7 +177,11 @@ const CustomerListView = () => {
               setOpenDrawer(false);
             }}
           >
-            <Box display="flex" justifyContent="flex-start">
+            <Box
+              display="flex"
+              justifyContent="flex-start"
+              className={classes.backButton}
+            >
               <IconButton
                 onClick={() => {
                   setOpenDrawer(false);
@@ -183,6 +191,7 @@ const CustomerListView = () => {
                 <ArrowBackIcon />
               </IconButton>
             </Box>
+            <Divider light />
             <AddCustomerView
               editCustomer={editCustomer}
               onAddCustomer={customer => {
